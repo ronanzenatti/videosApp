@@ -3,7 +3,7 @@
     <name>Videos App</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="ronan.zenatti@etec.sp.gov.br" href="http://ronanzenatti.com/">Ronan Adriel Zenatti</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

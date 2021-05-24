@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="dark">
-    <ion-title> Videos App </ion-title>
+    <ion-title> {{ titulo }} </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,62 +8,32 @@
   <ion-searchbar placeholder="Buscar"> </ion-searchbar>
 
   <ion-list>
-
-    <ion-item-sliding>
+    <ion-item-sliding *ngFor="let filme of listaVideos">
       <ion-item lines="full">
         <ion-thumbnail slot="start">
-          <img
-            src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/w8BVC3qrCWCiTHRz4Rft12dtQF0.jpg"
-          />
+          <img [src]="filme.cartaz" />
         </ion-thumbnail>
 
         <ion-label class="ion-text-wrap">
           <div>
-            <h1>Mortal Kombat (2021)</h1>
-            <p>15/04/2021 (BR) - 1h 50m</p>
-            <p>Ação, Fantasia, Aventura</p>
+            <h1>{{filme.nome}}</h1>
+            <p>{{filme.lancamento}} - {{filme.duracao}}</p>
+            <ion-badge color="light" *ngFor="let genero of filme.generos">
+              {{genero}}
+            </ion-badge>
           </div>
         </ion-label>
 
         <ion-chip color="success" outline>
-          <ion-label>76%</ion-label>
+          <ion-label>{{filme.classificacao}}%</ion-label>
         </ion-chip>
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="laranja" (click)="exibirAlertaFavorito()" >
+        <ion-item-option color="laranja" (click)="exibirAlertaFavorito()">
           <ion-icon slot="icon-only" name="star"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-
-    <ion-item-sliding>
-      <ion-item lines="full">
-        <ion-thumbnail slot="start">
-          <img
-            src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ArWn6gCi61b3b3hclD2L0LOk66k.jpg"
-          />
-        </ion-thumbnail>
-
-        <ion-label class="ion-text-wrap">
-          <div>
-            <h1>Liga da Justiça de Zack Snyder (2021)</h1>
-            <p>18/03/2021 (BR) - 4h 2m</p>
-            <p>Ação, Aventura, Fantasia, Ficção científica</p>
-          </div>
-        </ion-label>
-
-        <ion-chip color="success" outline>
-          <ion-label>76%</ion-label>
-        </ion-chip>
-      </ion-item>
-
-      <ion-item-options side="end">
-        <ion-item-option color="laranja" (click)="exibirAlertaFavorito()" >
-          <ion-icon slot="icon-only" name="star"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-
   </ion-list>
 </ion-content>
