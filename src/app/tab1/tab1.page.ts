@@ -1,6 +1,12 @@
+import { GenerosService } from './../services/generos.service';
+import { IGenero } from './../models/IGenero.model';
+import { IFilmeApi } from './../models/IFilmeApi.model';
+import { Observable } from 'rxjs';
+import { IListaFilmes } from './../models/IListaFilmes.model';
+import { FilmesService } from './../services/filmes.service';
 import { DadosService } from './../services/dados.service';
 import { IFilme } from '../models/IFilme.model';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -8,11 +14,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  styleUrls: ['tab1.page.scss'],
 })
-export class Tab1Page {
-
-  titulo = 'Vídeos';
+export class Tab1Page implements OnInit {
+  titulo = 'Filmes';
 
   listaVideos: IFilme[] = [
     {
@@ -20,28 +25,47 @@ export class Tab1Page {
       lancamento: '15/04/2021',
       duracao: '1h 50m',
       classificacao: 76,
-      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/w8BVC3qrCWCiTHRz4Rft12dtQF0.jpg',
+      cartaz:
+        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/w8BVC3qrCWCiTHRz4Rft12dtQF0.jpg',
       generos: ['Ação', 'Fantasia', 'Aventura'],
-      pagina: '/mortal-kombat'
+      pagina: '/mortal-kombat',
     },
     {
       nome: 'Liga da Justiça de Zack Snyder (2021)',
       lancamento: '18/03/2021',
       duracao: '4h 2m',
       classificacao: 76,
-      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ArWn6gCi61b3b3hclD2L0LOk66k.jpg',
+      cartaz:
+        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ArWn6gCi61b3b3hclD2L0LOk66k.jpg',
       generos: ['Ação', 'Aventura', 'Fantasia', 'Ficção científica'],
-      pagina: '/liga-justica'
-    }
+      pagina: '/liga-justica',
+    },
   ];
+
+  listaFilmes: IListaFilmes;
+
+  generos: string[] = [];
 
   constructor(
     public alertController: AlertController,
     public toastController: ToastController,
     public dadosService: DadosService,
-    public route: Router) { }
+    public filmesService: FilmesService,
+    public generoService: GenerosService,
+    public route: Router
+  ) {}
 
-  exibirFilme(filme: IFilme) {
+  buscarFilmes(evento: any) {
+    console.log(evento.target.value);
+    const busca = evento.target.value;
+
+    this.filmesService.buscarFilmes(busca).subscribe((dados) => {
+      console.log(dados);
+      this.listaFilmes = dados;
+    });
+  }
+
+  exibirFilme(filme: IFilmeApi) {
     this.dadosService.guardarDados('filme', filme);
     this.route.navigateByUrl('/dados-filme');
   }
@@ -56,14 +80,15 @@ export class Tab1Page {
           role: 'cancel',
           handler: (blah) => {
             console.log('Confirm Cancel: blah');
-          }
-        }, {
+          },
+        },
+        {
           text: 'SIM, favoritar!',
           handler: () => {
             this.apresentarToast();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -73,9 +98,17 @@ export class Tab1Page {
     const toast = await this.toastController.create({
       message: 'Filme adicionado aos favoritos.',
       duration: 2000,
-      color: 'success'
+      color: 'success',
     });
     toast.present();
   }
 
+  async ngOnInit() {
+    this.generoService.buscarGeneros().subscribe((dados) => {
+      console.log('Generos', dados.genres);
+      dados.genres.forEach((genero) => {
+        this.generos[genero.id] = genero.name;
+      });
+    });
+  }
 }
